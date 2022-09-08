@@ -15,25 +15,21 @@
         ></v-select>
         <v-btn color="primary" dark class="mb-2" @click="addTask()">追加</v-btn>
       </v-card-title>
-      <v-data-table
-        :headers="headers"
-        :items="items"
-        :items-per-page="5"
-        class="elevation-1"
-      >
-        <template v-slot:item.control="{ item }">
-          <v-btn
-            class="mx-2"
-            fab
-            dark
-            x-small
-            color="error"
-            @click="deleteTask(item)"
-          >
-            <v-icon dark>mdi-minus</v-icon>
-          </v-btn>
-        </template>
-      </v-data-table>
+      <v-list v-for="item in items" :key="item.id" cols="12">
+        <v-list-item-group>
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title>{{ item.id }}</v-list-item-title>
+            </v-list-item-content>
+            <v-list-item-content>
+              <v-list-item-title>{{ item.task }}</v-list-item-title>
+            </v-list-item-content>
+            <v-list-item-content>
+              <v-list-item-title>{{ item.task }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
     </v-card>
   </v-container>
 </template>
@@ -41,9 +37,29 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
+interface Item {
+  id: number;
+  task: string;
+  assignee: string;
+  control: boolean;
+}
+
+interface Header {
+  text: string;
+  sortable: boolean;
+  value: string;
+  width?: string;
+}
+
 export default defineComponent({
   name: "TodoList",
-  data: () => ({
+  data: (): {
+    headers: Header[];
+    items: Item[];
+    assignees: ("担当者A" | "担当者B" | "担当者C" | "担当者D" | "担当者E")[];
+    task: string;
+    assignee: string;
+  } => ({
     headers: [
       {
         text: "作業名",
@@ -76,15 +92,18 @@ export default defineComponent({
       }
       // タスク追加
       this.items.push({
+        id: Date.now(),
         task: this.task,
         assignee: this.assignee,
+        control: false,
       });
       // 入力値クリア
       this.task = "";
       this.assignee = "";
+      console.log(this.items);
     },
-    deleteTask: function (item) {
-      this.items.splice(this.items.indexOf(item), 1);
+    deleteTask: function (id: number) {
+      this.items.filter((item) => item.id !== id);
     },
   },
 });
