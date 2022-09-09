@@ -13,7 +13,8 @@
           class="mt-2"
           v-model="assignee"
         ></v-select>
-        <v-btn color="primary" dark class="mb-2" @click="addTask()">追加</v-btn>
+        <!-- <v-btn color="primary" dark class="mb-2" @click="addTask()">追加</v-btn> -->
+        <vw-btn @click="addTask()">追加</vw-btn>
       </v-card-title>
       <v-list v-for="item in items" :key="item.id" cols="12">
         <v-list-item-group>
@@ -33,6 +34,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import VwBtn from "./vw-btn.vue";
 
 interface Item {
   id: number;
@@ -50,6 +52,7 @@ interface Header {
 
 export default defineComponent({
   name: "TodoList",
+  components: { VwBtn },
   data: (): {
     headers: Header[];
     items: Item[];
